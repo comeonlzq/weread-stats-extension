@@ -1,0 +1,31 @@
+{
+  "manifest_version": 3,
+  "name": "微信读书统计助手",
+  "version": "1.1.0",
+  "description": "展示微信读书阅读数据统计：按周/月/年/全部查看阅读时长、天数、读书排行与偏好分析；在微信读书页面可于浏览器右侧侧边栏中使用。",
+  "minimum_chrome_version": "114",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_title": "微信读书统计",
+    "default_popup": "dashboard.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "background": {
+    "service_worker": "js/background.js"
+  },
+  "permissions": ["storage", "sidePanel"],
+  "host_permissions": ["https://i.weread.qq.com/*", "https://weread.qq.com/*"]
+}

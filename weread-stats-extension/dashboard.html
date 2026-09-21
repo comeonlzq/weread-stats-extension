@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>微信读书统计</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="topbar">
+        <div class="brand">
+          <svg
+            class="brand-logo"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+          </svg>
+          <span class="brand-name">微信读书统计</span>
+        </div>
+        <div class="topbar-actions">
+          <button
+            id="themeToggle"
+            class="icon-btn"
+            title="切换深色/浅色模式"
+            aria-label="切换主题"
+          >
+            <svg
+              class="ic-sun"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="4" />
+              <path
+                d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"
+              />
+            </svg>
+            <svg
+              class="ic-moon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+            </svg>
+          </button>
+          <button
+            id="refreshBtn"
+            class="icon-btn"
+            title="刷新数据"
+            aria-label="刷新数据"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
+              <path d="M21 3v5h-5" />
+              <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
+              <path d="M8 16H3v5" />
+            </svg>
+          </button>
+          <button
+            id="expandBtn"
+            class="icon-btn"
+            title="在标签页中打开"
+            aria-label="在标签页中打开"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M15 3h6v6" />
+              <path d="M9 21H3v-6" />
+              <path d="M21 3l-7 7" />
+              <path d="M3 21l7-7" />
+            </svg>
+          </button>
+          <button
+            id="settingsBtn"
+            class="icon-btn"
+            title="设置"
+            aria-label="设置"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path
+                d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+              />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+          </button>
+        </div>
+        <div class="progress" id="progressBar" hidden></div>
+      </header>
+
+      <div class="scroll" id="scrollArea">
+        <!-- 首次引导：填写 API Key -->
+        <main id="onboardView" class="view" hidden>
+          <div class="onboard glass">
+            <div class="onboard-logo">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+              </svg>
+            </div>
+            <h1>连接微信读书</h1>
+            <p class="onboard-desc">
+              填写你的微信读书 API Key，即可查看阅读时长、读书排行与偏好分析。
+            </p>
+            <label class="field-label" for="onboardKeyInput">API Key</label>
+            <input
+              id="onboardKeyInput"
+              type="password"
+              placeholder="wrk-xxxxxxxx"
+              autocomplete="off"
+              spellcheck="false"
+            />
+            <button class="btn primary block" id="onboardSaveBtn">
+              保存并连接
+            </button>
+            <p class="hint">
+              Key 仅保存在本地浏览器中，数据通过微信读书官方接口网关获取，格式以
+              <code>wrk-</code> 开头。可访问
+              <a
+                href="https://weread.qq.com/r/weread-skills"
+                target="_blank"
+                rel="noopener"
+                >weread.qq.com/r/weread-skills</a
+              >
+              获取你的 API Key。
+            </p>
+            <p class="hint error-text" id="onboardError" hidden></p>
+          </div>
+        </main>
+
+        <!-- 主视图 -->
+        <main id="mainView" class="view" hidden>
+          <div id="errorBox" class="error-box glass" hidden>
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+            <span id="errorMsg"></span>
+            <button class="btn ghost sm" id="errorRetryBtn">重试</button>
+            <button class="btn ghost sm" id="errorSettingsBtn" hidden>
+              检查 Key
+            </button>
+          </div>
+
+          <!-- 周期切换 -->
+          <div class="period-bar">
+            <div
+              class="tabs"
+              id="modeTabs"
+              role="tablist"
+              aria-label="统计周期"
+            >
+              <button data-mode="weekly" role="tab">周</button>
+              <button data-mode="monthly" role="tab" class="active">月</button>
+              <button data-mode="annually" role="tab">年</button>
+              <button data-mode="overall" role="tab">全部</button>
+            </div>
+            <div class="period-nav" id="periodNav">
+              <button
+                id="prevBtn"
+                class="icon-btn sm"
+                title="上一周期"
+                aria-label="上一周期"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="m15 18-6-6 6-6" />
+                </svg>
+              </button>
+              <span id="periodLabel">本月</span>
+              <button
+                id="nextBtn"
+                class="icon-btn sm"
+                title="下一周期"
+                aria-label="下一周期"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="m9 18 6-6-6-6" />
+                </svg>
+              </button>
+              <button id="todayBtn" class="link-btn" hidden>回到当前</button>
+            </div>
+          </div>
+
+          <!-- 骨架屏 -->
+          <div id="skeleton" hidden>
+            <div class="stat-hero">
+              <div class="skel big" style="width: 60%"></div>
+              <div class="skel w40" style="margin-top: 8px"></div>
+            </div>
+            <div class="stat-chips">
+              <div class="skel w80"></div>
+              <div class="skel w80"></div>
+              <div class="skel w80"></div>
+              <div class="skel w80"></div>
+            </div>
+            <div class="panel glass">
+              <div class="skel w30"></div>
+              <div class="skel chart"></div>
+            </div>
+            <div class="panel glass">
+              <div class="skel w30"></div>
+              <div class="skel row"></div>
+              <div class="skel row"></div>
+              <div class="skel row"></div>
+            </div>
+          </div>
+
+          <!-- 数据内容 -->
+          <div id="content" hidden>
+            <section class="stat-hero" id="statHero"></section>
+            <div class="stat-chips" id="readStatChips"></div>
+
+            <section class="panel glass">
+              <h2>阅读时长趋势</h2>
+              <div id="trendChart" class="chart-box"></div>
+            </section>
+
+            <section class="panel glass" id="booksPanel">
+              <h2>读得最多的书</h2>
+              <ol id="bookRank" class="book-rank"></ol>
+            </section>
+
+            <section class="panel glass" id="catsPanel">
+              <h2>偏好分类</h2>
+              <div id="preferCat" class="hbars"></div>
+            </section>
+
+            <section class="panel glass" id="hoursPanel">
+              <h2>
+                阅读时段分布<span
+                  class="panel-note"
+                  id="preferTimeWord"
+                  hidden
+                ></span>
+              </h2>
+              <div id="preferTime"></div>
+            </section>
+
+            <section class="panel glass" id="authorsPanel">
+              <h2>偏好作者</h2>
+              <div id="preferAuthor" class="hbars"></div>
+            </section>
+
+            <section class="panel glass" id="ratePanel" hidden>
+              <h2>阅读方式</h2>
+              <div class="rate-wrap">
+                <div id="rateDonut" class="donut-box"></div>
+                <div class="rate-legend" id="rateLegend"></div>
+              </div>
+            </section>
+
+            <div id="rankBadge" class="rank-badge glass" hidden></div>
+            <footer class="foot">
+              数据来自微信读书 · 更新于 <span id="updatedAt">--</span>
+            </footer>
+          </div>
+        </main>
+      </div>
+
+      <!-- 设置弹层 -->
+      <div id="settingsModal" class="modal-mask" hidden>
+        <div
+          class="modal glass"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="settingsTitle"
+        >
+          <div class="modal-head">
+            <h2 id="settingsTitle">设置</h2>
+            <button
+              class="icon-btn"
+              id="closeSettingsBtn"
+              aria-label="关闭设置"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </div>
+          <label class="field-label" for="apiKeyInput">API Key</label>
+          <div class="key-row">
+            <input
+              id="apiKeyInput"
+              type="password"
+              placeholder="wrk-xxxxxxxx"
+              autocomplete="off"
+              spellcheck="false"
+            />
+            <button
+              class="icon-btn"
+              id="toggleKeyVisBtn"
+              aria-label="显示或隐藏 Key"
+              title="显示/隐藏"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            </button>
+          </div>
+          <p class="hint">
+            API Key
+            仅保存在本地浏览器，通过微信读书官方接口网关（i.weread.qq.com）获取数据。格式以
+            <code>wrk-</code> 开头。可访问
+            <a
+              href="https://weread.qq.com/r/weread-skills"
+              target="_blank"
+              rel="noopener"
+              >weread.qq.com/r/weread-skills</a
+            >
+            获取你的 API Key。
+          </p>
+          <div class="modal-actions">
+            <button class="btn ghost" id="clearKeyBtn">清除</button>
+            <button class="btn primary" id="saveKeyBtn">保存</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="toast" class="toast" hidden></div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>
